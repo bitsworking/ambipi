@@ -22,11 +22,11 @@ def upload():
     put("src/*.py", RASPBERRY_PATH)
 
 def start():
-    run("python %sambipy.py -d start" % RASPBERRY_PATH)
+    run("python %sambipi.py -d start" % RASPBERRY_PATH)
 
 def stop():
-    run("python %sambipy.py -d stop" % RASPBERRY_PATH)
+    run("python %sambipi.py -d stop" % RASPBERRY_PATH)
 
 def restart():
-    run("python %sambipy.py -d restart" % RASPBERRY_PATH)
+    run("python %sambipi.py -d restart" % RASPBERRY_PATH)
 

@@ -5,8 +5,9 @@ import time
 import shlex
 import subprocess
 from optparse import OptionParser
-from daemon import Daemon
+from random import randrange
 
+from daemon import Daemon
 import patterns
 from LedStrip_WS2801 import LedStrip_WS2801
 
@@ -21,19 +22,24 @@ def main(options, args):
     print "ambipi lights, options=%s, args=%s" % (options, args)
 
     ledStrip = LedStrip_WS2801(250)
-    delayTime = 0.01
+    # delayTime = 0.01
 
     while True:
-        patterns.fillAll(ledStrip, [0, 255, 0], delayTime)
-        patterns.rainbowAll(ledStrip, 200, 0.01)
-        patterns.fillAll(ledStrip, [255, 0, 0], 0.01)
-        patterns.fillAll(ledStrip, [0, 255, 0], 0.01)
-        patterns.fillAll(ledStrip, [0, 0, 255], 0.01)
-        patterns.antialisedPoint(ledStrip, [255, 0, 0], 0.5, 0.3)
-        patterns.antialisedPoint(ledStrip, [0, 255, 0], 0.5, 0.3)
-        patterns.antialisedPoint(ledStrip, [0, 0, 255], 0.5, 0.3)
-        patterns.rainbowAll(ledStrip, 500, 0.01)
-        patterns.knight_rider(ledStrip)
+        (r, g, b) = (randrange(255), randrange(255), randrange(255))
+        # patterns.knight_rider(ledStrip, 7, (r, g, b), 1, 0.01)
+        patterns.antialisedPoint(ledStrip, (r, g, b), 1, 0.1)
+        # patterns.rainbowAll(ledStrip, 250, 0)
+
+        # patterns.fillAll(ledStrip, [0, 255, 0], delayTime)
+        # patterns.rainbowAll(ledStrip, 200, 0.01)
+        # patterns.fillAll(ledStrip, [255, 0, 0], 0.01)
+        # patterns.fillAll(ledStrip, [0, 255, 0], 0.01)
+        # patterns.fillAll(ledStrip, [0, 0, 255], 0.01)
+        # patterns.antialisedPoint(ledStrip, [255, 0, 0], 0.5, 0.3)
+        # patterns.antialisedPoint(ledStrip, [0, 255, 0], 0.5, 0.3)
+        # patterns.antialisedPoint(ledStrip, [0, 0, 255], 0.5, 0.3)
+        # patterns.rainbowAll(ledStrip, 500, 0.01)
+        # patterns.knight_rider(ledStrip)
 
 
 class MyDaemon(Daemon):
