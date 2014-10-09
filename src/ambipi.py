@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import os
 import time
 import shlex
@@ -6,6 +8,7 @@ from optparse import OptionParser
 from daemon import Daemon
 
 import patterns
+from LedStrip_WS2801 import LedStrip_WS2801
 
 # Directory we look for media files
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
@@ -16,16 +19,21 @@ PIDFILE = os.path.join(DIR_SCRIPT, "ambipi.pid")
 
 def main(options, args):
     print "ambipi lights, options=%s, args=%s" % (options, args)
-    fillAll(ledStrip, [0, 255, 0], delayTime)
-    rainbowAll(ledStrip, 200, 0.01)
-    fillAll(ledStrip, [255, 0, 0], 0.01)
-    fillAll(ledStrip, [0, 255, 0], 0.01)
-    fillAll(ledStrip, [0, 0, 255], 0.01)
-    antialisedPoint(ledStrip, [255, 0, 0], 0.5, 0.3)
-    antialisedPoint(ledStrip, [0, 255, 0], 0.5, 0.3)
-    antialisedPoint(ledStrip, [0, 0, 255], 0.5, 0.3)
-    rainbowAll(ledStrip, 500, 0.01)
-    knight_rider(ledStrip)
+
+    ledStrip = LedStrip_WS2801(250)
+    delayTime = 0.01
+
+    while True:
+        patterns.fillAll(ledStrip, [0, 255, 0], delayTime)
+        patterns.rainbowAll(ledStrip, 200, 0.01)
+        patterns.fillAll(ledStrip, [255, 0, 0], 0.01)
+        patterns.fillAll(ledStrip, [0, 255, 0], 0.01)
+        patterns.fillAll(ledStrip, [0, 0, 255], 0.01)
+        patterns.antialisedPoint(ledStrip, [255, 0, 0], 0.5, 0.3)
+        patterns.antialisedPoint(ledStrip, [0, 255, 0], 0.5, 0.3)
+        patterns.antialisedPoint(ledStrip, [0, 0, 255], 0.5, 0.3)
+        patterns.rainbowAll(ledStrip, 500, 0.01)
+        patterns.knight_rider(ledStrip)
 
 
 class MyDaemon(Daemon):
@@ -66,17 +74,3 @@ if __name__ == "__main__":
 
     else:
         main(options, args)
-
-    # elif options.update:
-    #     import urllib2
-    #     url = "https://raw2.github.com/metachris/raspberry-usblooper/master/usblooper.py"
-    #     print "Downloading update from '%s'..." % url
-    #     response = urllib2.urlopen(url)
-    #     code = response.read()
-
-    #     fn = os.path.realpath(__file__)
-    #     print "Updating '%s'..." % fn
-    #     with open(fn, "w") as f:
-    #         f.write(code)
-
-    #     print "Update finished!"

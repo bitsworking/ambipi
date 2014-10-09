@@ -28,5 +28,5 @@ def stop():
     run("python %sambipy.py -d stop" % RASPBERRY_PATH)
 
 def restart():
-    stop()
-    start()
+    run("python %sambipy.py -d restart" % RASPBERRY_PATH)
+
