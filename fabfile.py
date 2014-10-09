@@ -4,6 +4,8 @@ You can see all commands with `$ fab -l`. Typical usages:
 import os
 from fabric.api import local, run, env, put
 
+RASPBERRY_PATH = "/home/pi/lights/"
+
 # Change to fabfile directory, to make relative paths work
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 os.chdir(DIR_SCRIPT)
@@ -17,16 +19,14 @@ if not env.hosts:
 
 def upload():
     """ Upload python script to AmbiPi """
-    put("src/*.py", "/home/pi/lights/")
-
+    put("src/*.py", RASPBERRY_PATH)
 
 def start():
-    run("python /home/pi/lights/demo.py &")
+    run("python %sambipy.py -d start" % RASPBERRY_PATH)
 
 def stop():
-    run("killall python")
-# def reboot():
-#     run("sudo reboot")
+    run("python %sambipy.py -d stop" % RASPBERRY_PATH)
 
-# def shutdown():
-#     run("sudo shutdown -h now")
+def restart():
+    stop()
+    start()

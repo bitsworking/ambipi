@@ -5,6 +5,8 @@ import subprocess
 from optparse import OptionParser
 from daemon import Daemon
 
+import patterns
+
 # Directory we look for media files
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 
@@ -14,7 +16,16 @@ PIDFILE = os.path.join(DIR_SCRIPT, "ambipi.pid")
 
 def main(options, args):
     print "ambipi lights, options=%s, args=%s" % (options, args)
-    time.sleep(100000)
+    fillAll(ledStrip, [0, 255, 0], delayTime)
+    rainbowAll(ledStrip, 200, 0.01)
+    fillAll(ledStrip, [255, 0, 0], 0.01)
+    fillAll(ledStrip, [0, 255, 0], 0.01)
+    fillAll(ledStrip, [0, 0, 255], 0.01)
+    antialisedPoint(ledStrip, [255, 0, 0], 0.5, 0.3)
+    antialisedPoint(ledStrip, [0, 255, 0], 0.5, 0.3)
+    antialisedPoint(ledStrip, [0, 0, 255], 0.5, 0.3)
+    rainbowAll(ledStrip, 500, 0.01)
+    knight_rider(ledStrip)
 
 
 class MyDaemon(Daemon):
