@@ -4,7 +4,7 @@ You can see all commands with `$ fab -l`. Typical usages:
 import os
 from fabric.api import local, run, env, put
 
-RASPBERRY_PATH = "/home/pi/lights/"
+RASPBERRY_PATH = "/home/pi/ambipi/"
 
 # Change to fabfile directory, to make relative paths work
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))

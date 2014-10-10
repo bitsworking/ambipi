@@ -25,8 +25,7 @@ def mySin(a, min, max):
     return min + ((max - min) / 2.) * (math.sin(a) + 1)
 
 
-def rainbow(a):
-    intense = 255
+def rainbow(a, intense=255):
     return [int(mySin(a, 0, intense)), int(mySin(a + math.pi / 2, 0, intense)), int(mySin(a + math.pi, 0, intense))]
 
 

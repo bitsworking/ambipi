@@ -6,6 +6,7 @@ import shlex
 import subprocess
 from optparse import OptionParser
 from random import randrange
+import math
 
 from daemon import Daemon
 import patterns
@@ -18,6 +19,22 @@ DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 PIDFILE = os.path.join(DIR_SCRIPT, "ambipi.pid")
 
 
+# def rainbowAllWithBrighnessMover(ledStrip, times=10000):
+#     for t in range(0, times):
+#         for i in range(0, ledStrip.nLeds):
+#             ledStrip.setPixel(i, patterns.rainbow((1.1 * math.pi * (i + t)) / ledStrip.nLeds, (i + t) % 255))
+#         ledStrip.update()
+
+
+def rainbowAllWithBrighnessMover(ledStrip, times=10000):
+    for t in range(0, times):
+        for i in range(0, ledStrip.nLeds):
+            ledStrip.setPixel(i, patterns.rainbow((1.1 * math.pi * (i + t)) / ledStrip.nLeds, (i + t) % 255))
+        ledStrip.update()
+        time.sleep(0.01)
+
+
+
 def main(options, args):
     print "ambipi lights, options=%s, args=%s" % (options, args)
 
@@ -27,8 +44,12 @@ def main(options, args):
     while True:
         (r, g, b) = (randrange(255), randrange(255), randrange(255))
         # patterns.knight_rider(ledStrip, 7, (r, g, b), 1, 0.01)
-        patterns.antialisedPoint(ledStrip, (r, g, b), 1, 0.1)
-        # patterns.rainbowAll(ledStrip, 250, 0)
+        # patterns.antialisedPoint(ledStrip, (r, g, b), step=0.7, dscale=0.1)
+
+        # patterns.rainbowAll(ledStrip, 100, 0)
+        rainbowAllWithBrighnessMover(ledStrip)
+
+        # time.sleep(1)
 
         # patterns.fillAll(ledStrip, [0, 255, 0], delayTime)
         # patterns.rainbowAll(ledStrip, 200, 0.01)
