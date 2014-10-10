@@ -16,6 +16,3 @@ Links
 * http://www.hackerspaceshop.com/ledstrips/raspberrypi-ws2801.html
 * https://github.com/doceme/py-spidev
 
-Todo
-
-[ ] Logging to logfile

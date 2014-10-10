@@ -1,31 +1,41 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+import sys
 import time
-import shlex
-import subprocess
+import math
+import logging
+
 from optparse import OptionParser
 from random import randrange
-import math
 
-from daemon import Daemon
 import patterns
+from daemon import Daemon
 from LedStrip_WS2801 import LedStrip_WS2801
+
+NUM_LEDS = 250
 
 # Directory we look for media files
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 
-# PID
 PIDFILE = os.path.join(DIR_SCRIPT, "ambipi.pid")
+LOGFILE = os.path.join(DIR_SCRIPT, "ambipi.log")
+LOGFORMAT = "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s"
 
+# Setup Logging
+logFormatter = logging.Formatter(LOGFORMAT)
+rootLogger = logging.getLogger()
 
-# def rainbowAllWithBrighnessMover(ledStrip, times=10000):
-#     for t in range(0, times):
-#         for i in range(0, ledStrip.nLeds):
-#             ledStrip.setPixel(i, patterns.rainbow((1.1 * math.pi * (i + t)) / ledStrip.nLeds, (i + t) % 255))
-#         ledStrip.update()
+fileHandler = logging.FileHandler(LOGFILE)
+fileHandler.setFormatter(logFormatter)
+rootLogger.addHandler(fileHandler)
 
+consoleHandler = logging.StreamHandler(sys.stdout)
+consoleHandler.setFormatter(logFormatter)
+rootLogger.addHandler(consoleHandler)
+rootLogger.setLevel(logging.DEBUG)
 
+# Color Code
 def rainbowAllWithBrighnessMover(ledStrip, times=10000):
     for t in range(0, times):
         for i in range(0, ledStrip.nLeds):
@@ -34,12 +44,10 @@ def rainbowAllWithBrighnessMover(ledStrip, times=10000):
         time.sleep(0.01)
 
 
-
-def main(options, args):
-    print "ambipi lights, options=%s, args=%s" % (options, args)
-
-    ledStrip = LedStrip_WS2801(250)
-    # delayTime = 0.01
+# Main loop, either run from console or daemonized
+def _main(options, args):
+    rootLogger.info("ambipi: %s leds, options=%s, args=%s", NUM_LEDS, options, args)
+    ledStrip = LedStrip_WS2801(NUM_LEDS)
 
     while True:
         (r, g, b) = (randrange(255), randrange(255), randrange(255))
@@ -63,6 +71,15 @@ def main(options, args):
         # patterns.knight_rider(ledStrip)
 
 
+# Wrapper for main loop with exception logging
+def main(options, args):
+    try:
+        _main(options, args)
+    except:
+        rootLogger.exception(sys.exc_info()[0])
+
+
+# Simple Daemonization
 class MyDaemon(Daemon):
     def __init__(self, pidfile, options, args):
         self.options = options
@@ -73,6 +90,7 @@ class MyDaemon(Daemon):
         main(self.options, self.args)
 
 
+# Handle run from command line
 if __name__ == "__main__":
     # Prepare help and options
     usage = """usage: %prog [options]"""
