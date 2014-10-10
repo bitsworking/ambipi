@@ -13,27 +13,33 @@ import patterns
 from daemon import Daemon
 from LedStrip_WS2801 import LedStrip_WS2801
 
+# Set this to your number of leds
 NUM_LEDS = 250
 
-# Directory we look for media files
+# Get directory of this python script
 DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 
+# Setup files
 PIDFILE = os.path.join(DIR_SCRIPT, "ambipi.pid")
 LOGFILE = os.path.join(DIR_SCRIPT, "ambipi.log")
-LOGFORMAT = "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s"
 
 # Setup Logging
+LOGFORMAT = "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s"
 logFormatter = logging.Formatter(LOGFORMAT)
-rootLogger = logging.getLogger()
 
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+# Setup file log handler
 fileHandler = logging.FileHandler(LOGFILE)
 fileHandler.setFormatter(logFormatter)
-rootLogger.addHandler(fileHandler)
+logger.addHandler(fileHandler)
 
+# Setup console log handler
 consoleHandler = logging.StreamHandler(sys.stdout)
 consoleHandler.setFormatter(logFormatter)
-rootLogger.addHandler(consoleHandler)
-rootLogger.setLevel(logging.DEBUG)
+logger.addHandler(consoleHandler)
+
 
 # Color Code
 def rainbowAllWithBrighnessMover(ledStrip, times=10000):
@@ -46,7 +52,7 @@ def rainbowAllWithBrighnessMover(ledStrip, times=10000):
 
 # Main loop, either run from console or daemonized
 def _main(options, args):
-    rootLogger.info("ambipi: %s leds, options=%s, args=%s", NUM_LEDS, options, args)
+    logger.info("ambipi: %s leds, options=%s, args=%s", NUM_LEDS, options, args)
     ledStrip = LedStrip_WS2801(NUM_LEDS)
 
     while True:
@@ -75,8 +81,12 @@ def _main(options, args):
 def main(options, args):
     try:
         _main(options, args)
+
+    except KeyboardInterrupt:
+        logger.info("bye (via KeyboardInterrupt)")
+
     except:
-        rootLogger.exception(sys.exc_info()[0])
+        logger.exception(sys.exc_info()[0])
 
 
 # Simple Daemonization
