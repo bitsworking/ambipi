@@ -75,7 +75,7 @@ class MyDaemon(Daemon):
 
 if __name__ == "__main__":
     # Prepare help and options
-    usage = """usage: %prog [options] (start|stop|restart)"""
+    usage = """usage: %prog [options]"""
     desc = ("Bits Working AmbiPi")
     parser = OptionParser(usage=usage, description=desc)
 
