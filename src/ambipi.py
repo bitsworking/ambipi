@@ -83,10 +83,14 @@ def main(options, args):
         _main(options, args)
 
     except KeyboardInterrupt:
-        logger.info("bye (via KeyboardInterrupt)")
+        logger.info("KeyboardInterrupt")
 
     except:
         logger.exception(sys.exc_info()[0])
+        raise
+
+    finally:
+        logger.info("bye")
 
 
 # Simple Daemonization
